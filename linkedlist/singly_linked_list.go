@@ -186,6 +186,14 @@ func (l *SinglyLinkedList) Get(index int) int {
 }
 
 func (l *SinglyLinkedList) Search(data int) *SinglyLinkedListNode {
+	current := l.head
+	for current.Next != nil {
+		if current.Data == data {
+			return current
+		}
+		current = current.Next
+	}
+
 	return nil
 }
 

@@ -23,6 +23,11 @@ func TestQueueArray(t *testing.T) {
 				t.Errorf("expected %d; got %d", item, data)
 			}
 		}
+
+		emptyQueueData := queue.Dequeue()
+		if emptyQueueData != -1 {
+			t.Errorf("expected %d; got %d", -1, emptyQueueData)
+		}
 	}
 }
 
@@ -44,6 +49,11 @@ func TestQueueLinkedList(t *testing.T) {
 			if item != data {
 				t.Errorf("expected %d; got %d", item, data)
 			}
+		}
+
+		emptyQueueData := queue.Dequeue()
+		if emptyQueueData != -1 {
+			t.Errorf("expected %d; got %d", -1, emptyQueueData)
 		}
 	}
 }

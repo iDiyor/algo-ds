@@ -40,7 +40,13 @@ func (q *QueueArray) Dequeue() int {
 	}
 
 	data := q.Items[q.front]
-	q.front = (q.front + 1) % cap(q.Items)
+	if q.front == q.rear {
+		q.front = -1
+		q.rear = -1
+	} else {
+		q.front = (q.front + 1) % cap(q.Items)
+	}
+
 	q.size--
 	return data
 }
