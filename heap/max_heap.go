@@ -43,12 +43,17 @@ func (h *maxHeap) heapify(i int) {
 	}
 }
 
+func (h *maxHeap) bubbleUp(index int) {
+	for h.items[index] > h.items[parent(index)] {
+		h.items[index], h.items[parent(index)] = h.items[parent(index)], h.items[index]
+		index = parent(index)
+	}
+}
+
 func (h *maxHeap) Insert(data int) {
 	h.items = append(h.items, data)
-
-	for i := len(h.items)/2 - 1; i >= 0; i-- {
-		h.heapify(i)
-	}
+	n := len(h.items) - 1
+	h.bubbleUp(n)
 }
 
 func (h *maxHeap) Delete(data int) {
