@@ -3,7 +3,7 @@ package linkedlist
 import "testing"
 
 func TestSinglyLinkedList(t *testing.T) {
-	list := NewSinglyLinkedList()
+	list := NewSLLList()
 	list.InsertAtHead(1)
 	list.InsertAtTail(3)
 	list.InsertAtTail(8)

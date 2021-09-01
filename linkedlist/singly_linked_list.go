@@ -4,12 +4,12 @@ import (
 	"fmt"
 )
 
-type SinglyLinkedListNode struct {
-	Next *SinglyLinkedListNode
+type SLLNode struct {
+	Next *SLLNode
 	Data int
 }
 
-func (head *SinglyLinkedListNode) Size() int {
+func (head *SLLNode) Size() int {
 	if head == nil {
 		return 0
 	}
@@ -25,7 +25,7 @@ func (head *SinglyLinkedListNode) Size() int {
 	return size
 }
 
-func (head *SinglyLinkedListNode) String() string {
+func (head *SLLNode) String() string {
 	var result string
 
 	current := head
@@ -39,37 +39,37 @@ func (head *SinglyLinkedListNode) String() string {
 	return result
 }
 
-func NewSinglyLinkedListNode(data int) *SinglyLinkedListNode {
-	return &SinglyLinkedListNode{
+func NewSLLNode(data int) *SLLNode {
+	return &SLLNode{
 		Next: nil,
 		Data: data,
 	}
 }
 
-type SinglyLinkedList struct {
-	head *SinglyLinkedListNode
+type SLLList struct {
+	head *SLLNode
 }
 
-func NewSinglyLinkedList() *SinglyLinkedList {
-	return &SinglyLinkedList{
+func NewSLLList() *SLLList {
+	return &SLLList{
 		head: nil,
 	}
 }
 
-func (l *SinglyLinkedList) InsertAtHead(data int) {
+func (l *SLLList) InsertAtHead(data int) {
 	if l.head == nil {
-		l.head = NewSinglyLinkedListNode(data)
+		l.head = NewSLLNode(data)
 		return
 	}
 
-	newNode := NewSinglyLinkedListNode(data)
+	newNode := NewSLLNode(data)
 	newNode.Next = l.head
 	l.head = newNode
 }
 
-func (l *SinglyLinkedList) InsertAtTail(data int) {
+func (l *SLLList) InsertAtTail(data int) {
 	if l.head == nil {
-		l.head = NewSinglyLinkedListNode(data)
+		l.head = NewSLLNode(data)
 		return
 	}
 
@@ -79,10 +79,10 @@ func (l *SinglyLinkedList) InsertAtTail(data int) {
 		tail = tail.Next
 	}
 
-	tail.Next = NewSinglyLinkedListNode(data)
+	tail.Next = NewSLLNode(data)
 }
 
-func (l *SinglyLinkedList) InsertAtIndex(index, val int) {
+func (l *SLLList) InsertAtIndex(index, val int) {
 	if index < 0 || index > l.size() {
 		return
 	}
@@ -106,13 +106,13 @@ func (l *SinglyLinkedList) InsertAtIndex(index, val int) {
 	}
 
 	if currentIdx == index-1 && current.Next != nil {
-		newNode := NewSinglyLinkedListNode(val)
+		newNode := NewSLLNode(val)
 		newNode.Next = current.Next
 		current.Next = newNode
 	}
 }
 
-func (l *SinglyLinkedList) Delete(data int) {
+func (l *SLLList) Delete(data int) {
 	current := l.head
 
 	for current.Next != nil {
@@ -123,11 +123,11 @@ func (l *SinglyLinkedList) Delete(data int) {
 	}
 }
 
-func (l *SinglyLinkedList) DeleteHead() {
+func (l *SLLList) DeleteHead() {
 	l.head = l.head.Next
 }
 
-func (l *SinglyLinkedList) DeleteTail() {
+func (l *SLLList) DeleteTail() {
 	preTail := l.head
 
 	for preTail.Next.Next != nil {
@@ -137,7 +137,7 @@ func (l *SinglyLinkedList) DeleteTail() {
 	preTail.Next = nil
 }
 
-func (l *SinglyLinkedList) DeleteAtIndex(index int) {
+func (l *SLLList) DeleteAtIndex(index int) {
 	if index < 0 || index > l.size() {
 		return
 	}
@@ -165,7 +165,7 @@ func (l *SinglyLinkedList) DeleteAtIndex(index int) {
 	}
 }
 
-func (l *SinglyLinkedList) Get(index int) int {
+func (l *SLLList) Get(index int) int {
 	if l.head == nil {
 		return -1
 	}
@@ -185,7 +185,7 @@ func (l *SinglyLinkedList) Get(index int) int {
 	return current.Data
 }
 
-func (l *SinglyLinkedList) Search(data int) *SinglyLinkedListNode {
+func (l *SLLList) Search(data int) *SLLNode {
 	current := l.head
 	for current.Next != nil {
 		if current.Data == data {
@@ -197,12 +197,12 @@ func (l *SinglyLinkedList) Search(data int) *SinglyLinkedListNode {
 	return nil
 }
 
-func (l *SinglyLinkedList) Sort() {
+func (l *SLLList) Sort() {
 	bubbleSort(l.head)
 }
 
 // BubbleSort
-func bubbleSort(head *SinglyLinkedListNode) {
+func bubbleSort(head *SLLNode) {
 	if head == nil {
 		return
 	}
@@ -223,7 +223,7 @@ func bubbleSort(head *SinglyLinkedListNode) {
 }
 
 // MergeSort
-func mergeSort(head *SinglyLinkedListNode) *SinglyLinkedListNode {
+func mergeSort(head *SLLNode) *SLLNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
@@ -239,9 +239,9 @@ func mergeSort(head *SinglyLinkedListNode) *SinglyLinkedListNode {
 	return merge(left, right)
 }
 
-func merge(left, right *SinglyLinkedListNode) *SinglyLinkedListNode {
+func merge(left, right *SLLNode) *SLLNode {
 
-	var result *SinglyLinkedListNode
+	var result *SLLNode
 
 	if left == nil {
 		return right
@@ -260,7 +260,7 @@ func merge(left, right *SinglyLinkedListNode) *SinglyLinkedListNode {
 	return result
 }
 
-func getMiddleNode(head *SinglyLinkedListNode) *SinglyLinkedListNode {
+func getMiddleNode(head *SLLNode) *SLLNode {
 	if head == nil {
 		return head
 	}
@@ -276,7 +276,7 @@ func getMiddleNode(head *SinglyLinkedListNode) *SinglyLinkedListNode {
 	return slow
 }
 
-func (l *SinglyLinkedList) String() string {
+func (l *SLLList) String() string {
 	var result string
 
 	current := l.head
@@ -290,7 +290,7 @@ func (l *SinglyLinkedList) String() string {
 	return result
 }
 
-func (l *SinglyLinkedList) size() int {
+func (l *SLLList) size() int {
 	current := l.head
 	var size int
 
