@@ -10,7 +10,7 @@ func TestHashTable(t *testing.T) {
 		"Golang", "Python", "Java", "Javascript", "Rust", "OCaml", "C#", "Swift", "Kotlin", "C++",
 	}
 
-	hashTable := NewHashTable(10)
+	hashTable := NewHashTable(17)
 
 	for _, test := range tests {
 		if !hashTable.Insert(test) {

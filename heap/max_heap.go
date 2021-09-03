@@ -73,9 +73,7 @@ func (h *maxHeap) Delete(data int) {
 	// Remove the last element
 	h.items = append(h.items[:n], h.items[n+1:]...)
 
-	for i := len(h.items)/2 - 1; i >= 0; i-- {
-		h.heapify(i)
-	}
+	h.heapify(idx)
 }
 
 func (h *maxHeap) ExtractMax() int {
