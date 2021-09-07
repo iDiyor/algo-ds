@@ -59,22 +59,26 @@ func deleteNode(root *Node, data int) *Node {
 		// if key is same as root's
 		// key, then This is the
 		// node to be deleted
-
-		// if the node is with only one child or no child
-		if root.Left == nil {
-			return root.Right
-		} else if root.Right == nil {
-			return root.Left
+		// CASE 1: node has two children
+		if root.Left != nil && root.Right != nil {
+			// if the node has two children
+			// Place the inorder successor in position of
+			// the node to be deleted
+			// node with two children: Get the inorder
+			// successor (smallest in the right subtree)
+			root.Data = minValue(root.Right)
+			// delete the inorder successor
+			root.Right = deleteNode(root.Right, root.Data)
+		} else {
+			// CASE 2: node is a leaf node
+			if root.Left == nil && root.Right == nil {
+				root = nil
+			} else if root.Left == nil { // CASE 3: node has one or no child
+				root = root.Right
+			} else {
+				root = root.Left
+			}
 		}
-
-		// if the node has two children
-		// Place the inorder successor in position of
-		// the node to be deleted
-		// node with two children: Get the inorder
-		// successor (smallest in the right subtree)
-		root.Data = minValue(root.Right)
-		// delete the inorder successor
-		root.Right = deleteNode(root.Right, root.Data)
 	}
 
 	return root
