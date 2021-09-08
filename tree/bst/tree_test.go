@@ -13,6 +13,10 @@ func TestBinarySearchTree(t *testing.T) {
 		tree.Insert(test)
 	}
 
+	t.Logf("pre-order: %s", tree.PreOrder())
+	t.Logf("in-order: %s", tree.InOrder())
+	t.Logf("post-order: %s", tree.PostOrder())
+
 	if tree.Size() != len(tests) {
 		t.Errorf("expected size %d; got %d", len(tests), tree.Size())
 	}

@@ -1,10 +1,15 @@
 package bst
 
+import "fmt"
+
 type Tree interface {
 	Insert(data int)
 	Delete(data int)
 	Search(data int) *Node
 	Size() int
+	PreOrder() string
+	InOrder() string
+	PostOrder() string
 }
 
 type treeImpl struct {
@@ -117,4 +122,52 @@ func searchNode(root *Node, data int) *Node {
 
 func (t *treeImpl) Size() int {
 	return t.size
+}
+
+func (t *treeImpl) PreOrder() string {
+	return preOrder(t.root)
+}
+
+func preOrder(root *Node) string {
+	if root == nil {
+		return ""
+	}
+
+	var result string
+	result += fmt.Sprintf("(%d)->", root.Data)
+	result += preOrder(root.Left)
+	result += preOrder(root.Right)
+	return result
+}
+
+func (t *treeImpl) InOrder() string {
+	return inOrder(t.root)
+}
+
+func inOrder(root *Node) string {
+	if root == nil {
+		return ""
+	}
+
+	var result string
+	result += inOrder(root.Left)
+	result += fmt.Sprintf("(%d)->", root.Data)
+	result += inOrder(root.Right)
+	return result
+}
+
+func (t *treeImpl) PostOrder() string {
+	return postOrder(t.root)
+}
+
+func postOrder(root *Node) string {
+	if root == nil {
+		return ""
+	}
+
+	var result string
+	result += postOrder(root.Left)
+	result += postOrder(root.Right)
+	result += fmt.Sprintf("(%d)->", root.Data)
+	return result
 }
