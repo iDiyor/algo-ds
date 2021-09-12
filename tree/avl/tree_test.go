@@ -1,10 +1,10 @@
-package bst
+package avl
 
 import "testing"
 
-func TestBinarySearchTree(t *testing.T) {
+func TestTree(t *testing.T) {
 	tests := []int{
-		5, 10, 13, 9, 6, 20, 17, 11,
+		13, 10, 5, 4, 6, 11, 15, 16,
 	}
 
 	tree := NewTree()
@@ -13,12 +13,12 @@ func TestBinarySearchTree(t *testing.T) {
 		tree.Insert(test)
 	}
 
-	t.Logf("pre-order: %s", tree.PreOrder())
-	t.Logf("in-order: %s", tree.InOrder())
-	t.Logf("post-order: %s", tree.PostOrder())
-
 	if tree.Size() != len(tests) {
 		t.Errorf("expected size %d; got %d", len(tests), tree.Size())
+	}
+
+	if tree.Search(44) {
+		t.Errorf("not expected to find %d; but found", 44)
 	}
 
 	for _, test := range tests {
