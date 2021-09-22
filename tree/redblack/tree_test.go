@@ -1,7 +1,6 @@
 package redblack
 
 import (
-	"log"
 	"testing"
 )
 
@@ -16,8 +15,6 @@ func TestTree(t *testing.T) {
 		tree.Insert(test)
 	}
 
-	log.Printf("AFTER_INSERT: %v", tree.InOrder())
-
 	if tree.Size() != len(tests) {
 		t.Errorf("expected size %d; got %d", len(tests), tree.Size())
 	}
@@ -26,7 +23,15 @@ func TestTree(t *testing.T) {
 		t.Errorf("%d not found", tests[0])
 	}
 
-	if tree.Search(100) {
+	if tree.Search(2345678) {
 		t.Errorf("found non-existing key")
+	}
+
+	for _, test := range tests {
+		tree.Delete(test)
+	}
+
+	if tree.Size() != 0 {
+		t.Errorf("expected size %d; got %d", 0, tree.Size())
 	}
 }

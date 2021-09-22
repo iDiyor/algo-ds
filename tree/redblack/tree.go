@@ -1,6 +1,9 @@
 package redblack
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type Tree interface {
 	Insert(key int)
@@ -28,12 +31,12 @@ func (t *treeImpl) Insert(key int) {
 	t.size++
 
 	x := newNode(key)
+	var y *node // going to be parent of x
 
-	var p *node // going to be parent of x
 	r := t.root
 
 	for r != nil {
-		p = r
+		y = r
 		if x.key < r.key {
 			r = r.left
 		} else {
@@ -41,13 +44,13 @@ func (t *treeImpl) Insert(key int) {
 		}
 	}
 
-	x.parent = p
-	if p == nil {
+	x.parent = y
+	if y == nil {
 		t.root = x
-	} else if x.key < p.key {
-		p.left = x
+	} else if x.key < y.key {
+		y.left = x
 	} else {
-		p.right = x
+		y.right = x
 	}
 
 	// if new node is a root node, simply return
@@ -76,11 +79,11 @@ func (t *treeImpl) fixInsert(x *node) {
 			} else { // Case: 3.2.4
 				if x == x.parent.right {
 					x = x.parent
-					rotateLeft(x)
+					t.rotateLeft(x)
 				}
 				x.parent.color = colorBlack
 				x.parent.parent.color = colorRed
-				rotateRight(x.parent.parent)
+				t.rotateRight(x.parent.parent)
 			}
 		} else {
 			y := x.parent.parent.left  // uncle
@@ -92,11 +95,11 @@ func (t *treeImpl) fixInsert(x *node) {
 			} else { // Case: 3.2.2
 				if x == x.parent.left {
 					x = x.parent
-					rotateRight(x)
+					t.rotateRight(x)
 				}
 				x.parent.color = colorBlack
 				x.parent.parent.color = colorRed
-				rotateLeft(x.parent.parent)
+				t.rotateLeft(x.parent.parent)
 			}
 		}
 
@@ -108,18 +111,82 @@ func (t *treeImpl) fixInsert(x *node) {
 	t.root.color = colorBlack
 }
 
+func (t *treeImpl) fixDelete(x *node) {
+	if x == nil {
+		return
+	}
+
+	for x != t.root && x.isBlack() {
+		if x == x.parent.left {
+			s := x.parent.right
+			if s != nil && s.isRed() {
+				s.color = colorBlack
+				x.parent.color = colorRed
+				t.rotateLeft(x.parent)
+				s = x.parent.right
+			}
+			if (s.left == nil || s.left.isBlack()) && (s.right != nil || s.right.isBlack()) {
+				s.color = colorRed
+				x = x.parent
+			} else {
+				if s.right.isBlack() {
+					s.left.color = colorBlack
+					s.color = colorRed
+					t.rotateRight(s)
+					s = x.parent.right
+				}
+
+				s.color = x.parent.color
+				s.right.color = colorBlack
+				x.parent.color = colorBlack
+				t.rotateLeft(x.parent)
+				x = t.root
+			}
+		} else { // x is right child
+			s := x.parent.left
+			if s != nil && s.isRed() {
+				s.color = colorBlack
+				x.parent.color = colorRed
+				t.rotateRight(x.parent)
+				s = x.parent.left
+			}
+			if (s.left == nil || s.left.isBlack()) && (s.right == nil || s.right.isBlack()) {
+				s.color = colorRed
+				x = x.parent
+			} else {
+				if s.left.isBlack() {
+					s.right.color = colorBlack
+					s.color = colorRed
+					t.rotateLeft(s)
+					s = s.parent.left
+				}
+
+				s.color = x.parent.color
+				x.parent.color = colorBlack
+				s.left.color = colorBlack
+				t.rotateRight(x.parent)
+				x = t.root
+			}
+		}
+	}
+
+	x.color = colorBlack
+}
+
 func (t *treeImpl) Delete(key int) {
+	log.Printf("deleting %d; root: %s", key, t.root)
+	t.size--
+
 	if t.root == nil {
 		return
 	}
 
-	var x *node
-
+	var z, x *node
 	r := t.root
 
 	for r != nil {
 		if r.key == key {
-			x = r
+			z = r
 			break
 		} else if key < r.key {
 			r = r.left
@@ -129,8 +196,45 @@ func (t *treeImpl) Delete(key int) {
 	}
 
 	// a node containing the key is not found
-	if x == nil {
+	if z == nil {
 		return
+	}
+
+	log.Printf("found node: %s", z)
+
+	y := z
+	yOriginalColor := y.color
+	if z.left == nil {
+		x = z.right
+		rbTransplant(t.root, z, z.right)
+	} else if z.right == nil {
+		x = z.left
+		rbTransplant(t.root, z, z.left)
+	} else {
+		y = getMin(y.right)
+		yOriginalColor = y.color
+		x = y.right
+
+		if y.parent == z && x != nil {
+			x.parent = y
+		} else {
+			rbTransplant(t.root, y, y.right) // (y.parent.left|right) --> (y.right); y is spliced out
+			y.right = z.right
+			if y.right != nil {
+				y.right.parent = y
+			}
+		}
+
+		rbTransplant(t.root, z, y)
+		y.left = z.left
+		if y.left != nil {
+			y.left.parent = y
+		}
+		y.color = z.color
+	}
+
+	if yOriginalColor == colorBlack {
+		t.fixDelete(x)
 	}
 }
 
@@ -203,4 +307,26 @@ func postOrder(root *node) string {
 	result += fmt.Sprintf("(%d)->", root.key)
 
 	return result
+}
+
+func rbTransplant(root, u, v *node) {
+	if u.parent == nil {
+		root = v
+	} else if u == u.parent.left {
+		u.parent.left = v
+	} else {
+		u.parent.right = v
+	}
+
+	if v != nil {
+		v.parent = u.parent
+	}
+}
+
+func getMin(node *node) *node {
+	for node.left != nil {
+		node = node.left
+	}
+
+	return node
 }

@@ -1,6 +1,6 @@
 package redblack
 
-func rotateLeft(x *node) {
+func (t *treeImpl) rotateLeft(x *node) {
 	if x == nil {
 		return
 	}
@@ -15,7 +15,7 @@ func rotateLeft(x *node) {
 	y.parent = x.parent
 
 	if x.parent == nil {
-		y.parent = nil
+		t.root = y
 	} else if x == x.parent.left {
 		x.parent.left = y
 	} else {
@@ -26,7 +26,7 @@ func rotateLeft(x *node) {
 	x.parent = y
 }
 
-func rotateRight(x *node) {
+func (t *treeImpl) rotateRight(x *node) {
 	if x == nil {
 		return
 	}
@@ -41,7 +41,7 @@ func rotateRight(x *node) {
 	y.parent = x.parent
 
 	if x.parent == nil {
-		y.parent = nil
+		t.root = y
 	} else if x == x.parent.left {
 		x.parent.left = y
 	} else {

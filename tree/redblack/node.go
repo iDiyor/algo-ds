@@ -1,5 +1,7 @@
 package redblack
 
+import "fmt"
+
 const (
 	colorBlack = 0
 	colorRed   = 1
@@ -29,4 +31,12 @@ func (n node) isBlack() bool {
 
 func (n node) isRed() bool {
 	return n.color == colorRed
+}
+
+func (n node) String() string {
+	color := "RED"
+	if n.isBlack() {
+		color = "BLACK"
+	}
+	return fmt.Sprintf("node-%d(%v)", n.key, color)
 }
