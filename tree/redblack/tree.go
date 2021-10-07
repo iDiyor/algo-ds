@@ -53,7 +53,7 @@ func (t *treeImpl) Insert(key int) {
 		y.right = x
 	}
 
-	// if new node is a root node, simply return
+	// if new node is a root node, set black color and simply return
 	if x.parent == nil {
 		x.color = colorBlack
 		return
@@ -206,10 +206,10 @@ func (t *treeImpl) Delete(key int) {
 	yOriginalColor := y.color
 	if z.left == nil {
 		x = z.right
-		rbTransplant(t.root, z, z.right)
+		t.rbTransplant(z, z.right)
 	} else if z.right == nil {
 		x = z.left
-		rbTransplant(t.root, z, z.left)
+		t.rbTransplant(z, z.left)
 	} else {
 		y = getMin(y.right)
 		yOriginalColor = y.color
@@ -218,14 +218,14 @@ func (t *treeImpl) Delete(key int) {
 		if y.parent == z && x != nil {
 			x.parent = y
 		} else {
-			rbTransplant(t.root, y, y.right) // (y.parent.left|right) --> (y.right); y is spliced out
+			t.rbTransplant(y, y.right) // (y.parent.left|right) --> (y.right); y is spliced out
 			y.right = z.right
 			if y.right != nil {
 				y.right.parent = y
 			}
 		}
 
-		rbTransplant(t.root, z, y)
+		t.rbTransplant(z, y)
 		y.left = z.left
 		if y.left != nil {
 			y.left.parent = y
@@ -309,9 +309,9 @@ func postOrder(root *node) string {
 	return result
 }
 
-func rbTransplant(root, u, v *node) {
+func (t *treeImpl) rbTransplant(u, v *node) {
 	if u.parent == nil {
-		root = v
+		t.root = v
 	} else if u == u.parent.left {
 		u.parent.left = v
 	} else {
