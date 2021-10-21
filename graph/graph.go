@@ -2,6 +2,7 @@ package graph
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Graph interface {
@@ -118,4 +119,20 @@ func contains(list []*vertex, key int) bool {
 		}
 	}
 	return false
+}
+
+func (g *graphImpl) String() string {
+	var buff strings.Builder
+	buff.WriteString("\n##### GRAPH #####\n")
+
+	for i, v := range g.vertices {
+		buff.WriteString(fmt.Sprintf("%d.[%d] - ", i, v.key))
+		for _, adjV := range v.adjVertices {
+			buff.WriteString(fmt.Sprintf("[%d]->", adjV.key))
+		}
+		buff.WriteString("\n")
+	}
+
+	buff.WriteString("##### END #####\n")
+	return buff.String()
 }

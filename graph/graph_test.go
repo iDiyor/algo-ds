@@ -8,7 +8,7 @@ func TestGraph(t *testing.T) {
 	}
 
 	edges := [][]int{
-		{10, 20}, {20, 30}, {30, 40}, {40, 50}, {50, 60}, {60, 70}, {70, 80}, {80, 90}, {90, 100}, {100, 10},
+		{10, 20}, {20, 30}, {30, 40}, {40, 50}, {50, 60}, {20, 60}, {60, 70}, {70, 80}, {80, 90}, {90, 100}, {100, 10},
 	}
 
 	graph := NewGraph()
@@ -41,6 +41,8 @@ func TestGraph(t *testing.T) {
 	if err := graph.AddEdge(200, 500); err == nil {
 		t.Errorf("error adding edge between non-existing verticies [%d,%d]", 200, 500)
 	}
+
+	t.Log(graph)
 
 	for _, adjKeys := range edges {
 		if err := graph.RemoveEdge(adjKeys[0], adjKeys[1]); err != nil {
